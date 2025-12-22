@@ -11,10 +11,20 @@ class CryptoService
     private const IV_LENGTH = 12;
     private const TAG_LENGTH = 16;
 
-    public function createEncryptedMasterKey(string $password): string{
+    public function createEncryptedMasterKey(string $password): string
+    {
+        $salt = $this->generateSalt();
+
 
         return;
     }
+
+    private function generateSalt(): string
+    {
+        return random_bytes(self::SALT_LENGTH);
+    }
+
+
 
 
 }
