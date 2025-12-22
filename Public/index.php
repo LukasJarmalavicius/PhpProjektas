@@ -10,11 +10,15 @@ use App\CryptoService;
 
 $crypto = new CryptoService();
 
-echo "test ";
 $password = "test";
 
-$hashedPassword = $crypto->hashPassword($password);
+echo "password: " . $password . "<br>";
+
 
 $masterKey = $crypto->createEncryptedMasterKey($password);
 
-echo bin2hex($masterKey);
+echo bin2hex($masterKey) . "<br>";
+
+$decryptedKey = $crypto->decryptMasterKey($masterKey, $password);
+
+echo bin2hex($decryptedKey) . "<br>";
