@@ -18,8 +18,6 @@ class CryptoService
         $encryptionKey = $this->generateEncryptionKey($password, $salt);
         $iv = $this->generateIV();
 
-        //echo bin2hex($masterKey) . "<br>";
-
         $encrypted = openssl_encrypt(
             $masterKey,
             "aes-256-gcm",
