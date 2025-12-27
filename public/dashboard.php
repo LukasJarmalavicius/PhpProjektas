@@ -6,7 +6,6 @@
     require __DIR__ . '/../classes/autoload.php';
 
     use classes\database\DbConnection;
-    use classes\database\UserTable;
     use classes\database\PasswordEntryTable;
     use classes\services\CryptoService;
     use classes\services\PasswordGenerator;
@@ -22,7 +21,6 @@
     $masterKey = base64_decode((string)$_SESSION['masterKey'], true);
 
     $pdo = DbConnection::connection();
-    $userTable = new UserTable($pdo);
     $entryTable = new PasswordEntryTable($pdo);
     $cryptoService = new CryptoService();
     $passwordGenerator = new PasswordGenerator();
@@ -39,7 +37,7 @@
                 $password    = (string)($_POST['password'] ?? '');
 
                 if ($serviceName === '' || $password === '') {
-                    throw new RuntimeException('Service name and password are required.');
+                    throw new Exception('Service name and password are required.');
                 }
 
                 $encryptedPassword = $cryptoService->encryptPassword($password, $masterKey);
@@ -71,7 +69,7 @@
                 $entryId = (int)($_POST['entry_id'] ?? 0);
 
                 if ($entryId <= 0) {
-                    throw new RuntimeException('Invalid entry.');
+                    throw new Exception('Invalid entry.');
                 }
 
                 $entryTable->deletePasswordEntry($entryId, $userID);

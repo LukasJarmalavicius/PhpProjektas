@@ -23,6 +23,11 @@
 <div class="message"><?= htmlspecialchars($message) ?></div>
 <?php endif; ?>
 
+<form method="post" action="../public/logout.php">
+    <button type="submit">Sign out</button>
+</form>
+
+
 <div class="box">
     <h2>Add password entry</h2>
     <p class="hint">Store a password for a website/app.</p>

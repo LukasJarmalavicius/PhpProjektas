@@ -15,6 +15,10 @@ ini_set('display_errors', 1);
     $cryptoService = new CryptoService();
     $authService = new AuthService($userTable, $cryptoService);
 
+    if (!empty($_SESSION['id']) || !empty($_SESSION['masterKey'])) {
+        header('Location: dashboard.php');
+        exit;
+    }
 
     $message = '';
 

@@ -40,7 +40,6 @@ class AuthService
         }
         $hashedPassword = $this->hashPassword($password);
         $encryptedMasterKey = $this->cryptoService->createEncryptedMasterKey($password);
-
         $userTable->createUser($email, $hashedPassword, $encryptedMasterKey);
     }
 

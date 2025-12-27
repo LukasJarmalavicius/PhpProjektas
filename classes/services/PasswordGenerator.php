@@ -1,7 +1,8 @@
 <?php
 
 namespace classes\services;
-use http\Exception\RuntimeException;
+
+use Exception;
 
 class PasswordGenerator
 {
@@ -14,7 +15,7 @@ class PasswordGenerator
     ): string
     {
         if ($digits + $lowercase + $uppercase + $special !== $totalLength) {
-            throw new RuntimeException('Counts must add up to total length');
+            throw new Exception('Counts must add up to total length');
         }
 
         $passwordChars = [];

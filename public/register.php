@@ -11,7 +11,14 @@
     $cryptoService = new CryptoService();
     $authService = new AuthService($userTable, $cryptoService);
 
+    session_start();
+
     $message = '';
+
+    if (!empty($_SESSION['id']) || !empty($_SESSION['masterKey'])) {
+        header('Location: dashboard.php');
+        exit;
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -20,6 +27,8 @@
            $email = $_POST['email'] ?? '';
            $password = $_POST['password'] ?? '';
            $authService->registerUser($email, $password);
+           header("Location: login.php");
+           exit;
         }
         catch (Exception $e) {
             $message = $e->getMessage();
