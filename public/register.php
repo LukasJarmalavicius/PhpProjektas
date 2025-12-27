@@ -1,5 +1,5 @@
 <?php
-    $authService = require __DIR__ . '/../app/Auth.php';
+    $authService = require __DIR__ . '/../classes/Auth.php';
 
     $message = '';
 

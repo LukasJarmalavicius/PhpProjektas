@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; max-width: 900px; }
+        .box { border: 1px solid #ddd; padding: 16px; margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; }
+        input { padding: 8px; width: 100%; max-width: 420px; }
+        button { margin-top: 14px; padding: 10px 14px; }
+        .message { margin: 16px 0; color: #b00; }
+        .row { display: flex; gap: 16px; flex-wrap: wrap; }
+        .col { flex: 1; min-width: 260px; }
+        .hint { color: #666; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+
+<h1>Dashboard</h1>
+
+<?php if (!empty($message)): ?>
+<div class="message"><?= htmlspecialchars($message) ?></div>
+<?php endif; ?>
+
+<div class="box">
+    <h2>Add password entry</h2>
+    <p class="hint">Store a password for a website/app. (Encryption + DB storage to be wired in next.)</p>
+
+    <form method="post">
+        <input type="hidden" name="action" value="add_entry">
+
+        <label>
+            Service / App name
+            <input type="text" name="service_name" required>
+        </label>
+
+        <label>
+            Password (or generate below and paste here)
+            <input type="text" name="password" required>
+        </label>
+
+        <button type="submit">Save entry</button>
+    </form>
+</div>
+
+<div class="box">
+    <h2>Generate password</h2>
+    <p class="hint">Counts must add up to total length.</p>
+
+    <form method="post">
+        <input type="hidden" name="action" value="generate">
+
+        <div class="row">
+            <div class="col">
+                <label>
+                    Total length
+                    <input type="number" name="length" min="1" value="12" required>
+                </label>
+
+                <label>
+                    Lowercase count
+                    <input type="number" name="lower" min="0" value="4" required>
+                </label>
+
+                <label>
+                    Uppercase count
+                    <input type="number" name="upper" min="0" value="4" required>
+                </label>
+            </div>
+
+            <div class="col">
+                <label>
+                    Digits count
+                    <input type="number" name="digits" min="0" value="2" required>
+                </label>
+
+                <label>
+                    Special count
+                    <input type="number" name="special" min="0" value="2" required>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit">Generate</button>
+    </form>
+</div>
+
+<div class="box">
+    <h2>Stored entries</h2>
+    <p class="hint">This section will list stored passwords once PasswordEntryRepository + decrypt flow is wired.</p>
+
+    <!-- Placeholder list -->
+    <ul>
+        <li>(Not wired yet)</li>
+    </ul>
+</div>
+
+</body>
+</html>

@@ -1,10 +1,10 @@
 <?php /** @noinspection SqlNoDataSourceInspection */
 
-namespace app\database;
+namespace classes\database;
 
 use PDO;
 
-class UserRepository
+class UserTable
 {
     private PDO $pdo;
 
@@ -20,14 +20,6 @@ class UserRepository
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
-    public function findPasswordByEmail(string $email) : ?string
-    {
-        $stmt = $this->pdo->prepare("SELECT password_hash FROM Users WHERE email = :email LIMIT 1");
-        $stmt->execute(['email' => $email]);
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? $row['password_hash'] : null;
-    }
 
     public function createUser(
         string $username,

@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace app\services;
+namespace classes\services;
 
 use RuntimeException;
 

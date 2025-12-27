@@ -1,17 +1,17 @@
 <?php
 
-namespace app\services;
+namespace classes\services;
 
-use app\database\UserRepository;
+use classes\database\UserTable;
 use Exception;
 
 class AuthService
 
 {
-    private UserRepository $userRepository;
+    private UserTable $userRepository;
     private CryptoService $cryptoService;
 
-    public function __construct(UserRepository $userRepository, CryptoService $cryptoService)
+    public function __construct(UserTable $userRepository, CryptoService $cryptoService)
     {
         $this->userRepository = $userRepository;
         $this->cryptoService = $cryptoService;
@@ -50,11 +50,11 @@ class AuthService
     public function loginUser($email, $password): void
     {
         $userRepository = $this->userRepository;
-        $user = $userRepository->findPasswordByEmail($email);
+        $user = $userRepository->findUserByEmail($email);
         if($user === null){
             throw new Exception("User doesnt exist");
         }
-        $result = $this->verifyPassword($password, $user);
+        $result = $this->verifyPassword($password, $user['password_hash']);
         if(!$result){
             throw new Exception("Wrong password");
         }
