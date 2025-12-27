@@ -16,10 +16,15 @@
 
 <h1>Register</h1>
 
-<form method="post" action="">
+<form method="post">
     <label>
         Username
         <input type="text" name="username" required>
+    </label>
+
+    <label>
+        Email
+        <input type="text" name="email" required>
     </label>
 
     <label>
@@ -29,6 +34,10 @@
 
     <button type="submit">Register</button>
 </form>
+
+    <?php if (!empty($message)): ?>
+        <p class="message"><?= htmlspecialchars($message) ?></p>
+    <?php endif; ?>
 
 </body>
 </html>

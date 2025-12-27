@@ -1,6 +1,8 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace App;
+namespace app\services;
+
+use RuntimeException;
 
 class CryptoService
 {
@@ -65,16 +67,13 @@ class CryptoService
         $result = $this->parseEncryptedKeyBlob($encryptedMasterKey);
         $encryptionKey = $this->generateEncryptionKey($password, $result['salt']);
 
-        $decryptedKey = openssl_decrypt($result['key'],
+        return openssl_decrypt($result['key'],
             'aes-256-gcm',
         $encryptionKey,
         OPENSSL_RAW_DATA,
         $result['iv'],
-        $result['tag'],
-        ''
+        $result['tag']
         );
-
-        return $decryptedKey;
     }
 //</editor-fold>
 
@@ -86,13 +85,13 @@ class CryptoService
         $minLength = 1 + self::SALT_LENGTH + self::IV_LENGTH + self::TAG_LENGTH + self::KEY_LENGTH;
 
         if (strlen($blob) < $minLength) {
-            throw new \RuntimeException('incorrect blob');
+            throw new RuntimeException('incorrect blob');
         }
         $offset = 0;
 
         $version = substr($blob, $offset, 1);
         if ($version !== self::VERSION) {
-            throw new \RuntimeException('incorrect blob');
+            throw new RuntimeException('incorrect blob');
         }
         $offset += 1;
 
