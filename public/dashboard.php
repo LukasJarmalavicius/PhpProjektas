@@ -44,6 +44,27 @@
 
                 $encryptedPassword = $cryptoService->encryptPassword($password, $masterKey);
                 $entryTable->createPasswordEntry($userID, $serviceName, $encryptedPassword);
+                header("Location: dashboard.php");
+                exit;
+            }
+
+            if ($action === 'generate') {
+
+                $length  = (int)($_POST['length']  ?? 0);
+                $lower   = (int)($_POST['lower']   ?? 0);
+                $upper   = (int)($_POST['upper']   ?? 0);
+                $digits  = (int)($_POST['digits']  ?? 0);
+                $special = (int)($_POST['special'] ?? 0);
+
+                $generatedPassword = $passwordGenerator->generatePassword(
+                    $length,
+                    $digits,
+                    $lower,
+                    $upper,
+                    $special
+                );
+                $message = 'Password generated.';
+
             }
 
             if ($action === 'delete_entry') {
@@ -54,9 +75,10 @@
                 }
 
                 $entryTable->deletePasswordEntry($entryId, $userID);
+                header("Location: dashboard.php");
+                exit;
                 }
-            header("Location: dashboard.php");
-            exit;
+
 
         } catch (Exception $e) {
             $message = $e->getMessage();

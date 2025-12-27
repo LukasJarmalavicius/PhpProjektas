@@ -37,7 +37,10 @@
 
         <label>
             Password (or generate below and paste here)
-            <input type="text" name="password" required>
+            <input type="text" name="password"
+                   value="<?= htmlspecialchars($generatedPassword ?? '') ?>"
+                   required>
+
         </label>
 
         <button type="submit">Save entry</button>
