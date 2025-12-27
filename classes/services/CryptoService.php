@@ -33,12 +33,57 @@ class CryptoService
         return self::VERSION . $salt . $iv . $tag . $encrypted;
     }
 
+    public function encryptPassword(string $password, string $masterKey): string
+    {
+        $iv = $this->generateIV();
+
+        $encryptedPassword =openssl_encrypt(
+            $password,
+            "aes-256-gcm",
+            $masterKey,
+            OPENSSL_RAW_DATA,
+            $iv,
+            $tag,
+            '',
+            self::TAG_LENGTH);
+
+        return $iv . $tag . $encryptedPassword;
+    }
+
+    public function decryptMasterKey(string $encryptedMasterKey, string $password): string
+    {
+        $result = $this->parseEncryptedKeyBlob($encryptedMasterKey);
+        $encryptionKey = $this->generateEncryptionKey($password, $result['salt']);
+
+        return openssl_decrypt($result['key'],
+            'aes-256-gcm',
+            $encryptionKey,
+            OPENSSL_RAW_DATA,
+            $result['iv'],
+            $result['tag']
+        );
+    }
+
+    public function decryptPassword(string $encryptedPassword, string $masterKey): string
+    {
+        $result = $this->parsePasswordBlob($encryptedPassword);
+
+        return openssl_decrypt($result['key'],
+            'aes-256-gcm',
+            $masterKey,
+            OPENSSL_RAW_DATA,
+            $result['iv'],
+            $result['tag']
+        );
+    }
+
+    //<editor-fold desc="Encryption helper methods">
+
     private function generateSalt(): string
     {
         return random_bytes(self::SALT_LENGTH);
     }
 
-    //<editor-fold desc="Encryption helper methods">
 
     private function generateMasterKey(): string
     {
@@ -61,23 +106,11 @@ class CryptoService
     {
         return random_bytes(self::IV_LENGTH);
     }
+    //</editor-fold>
 
-    public function decryptMasterKey(string $encryptedMasterKey, string $password): string
-    {
-        $result = $this->parseEncryptedKeyBlob($encryptedMasterKey);
-        $encryptionKey = $this->generateEncryptionKey($password, $result['salt']);
+    //<editor-fold desc="Decryption helper methods">
 
-        return openssl_decrypt($result['key'],
-            'aes-256-gcm',
-        $encryptionKey,
-        OPENSSL_RAW_DATA,
-        $result['iv'],
-        $result['tag']
-        );
-    }
-//</editor-fold>
 
-//<editor-fold desc="Decryption helper methods">
 
     private function parseEncryptedKeyBlob(string $blob): array
     {
@@ -107,6 +140,23 @@ class CryptoService
         $key = substr($blob, $offset, self::KEY_LENGTH);
 
         return ['salt' => $salt, 'iv' => $iv, 'tag' => $tag, 'key' => $key];
+    }
+
+    private function parsePasswordBlob(string $blob): array
+    {
+        $minLength = self::IV_LENGTH + self::TAG_LENGTH;
+
+        $offset = 0;
+
+        $iv = substr($blob, $offset, self::IV_LENGTH);
+        $offset += self::IV_LENGTH;
+
+        $tag = substr($blob, $offset, self::TAG_LENGTH);
+        $offset += self::TAG_LENGTH;
+
+        $key = substr($blob, $offset);
+
+        return ['iv' => $iv, 'tag' => $tag, 'key' => $key];
     }
 
 //</editor-fold>

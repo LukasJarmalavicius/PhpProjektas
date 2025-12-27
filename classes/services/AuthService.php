@@ -8,12 +8,12 @@ use Exception;
 class AuthService
 
 {
-    private UserTable $userRepository;
+    private UserTable $userTable;
     private CryptoService $cryptoService;
 
-    public function __construct(UserTable $userRepository, CryptoService $cryptoService)
+    public function __construct(UserTable $userTable, CryptoService $cryptoService)
     {
-        $this->userRepository = $userRepository;
+        $this->userTable = $userTable;
         $this->cryptoService = $cryptoService;
     }
 
@@ -31,17 +31,17 @@ class AuthService
     /**
      * @throws Exception if user exists
      */
-    public function registerUser($username, $email, $password): void
+    public function registerUser($email, $password): void
     {
-        $userRepository = $this->userRepository;
-        $user = $userRepository->findUserByEmail($email);
+        $userTable = $this->userTable;
+        $user = $userTable->findUserByEmail($email);
         if($user != null){
             throw new Exception("User already exists");
         }
         $hashedPassword = $this->hashPassword($password);
         $encryptedMasterKey = $this->cryptoService->createEncryptedMasterKey($password);
 
-        $userRepository->createUser($username, $email, $hashedPassword, $encryptedMasterKey);
+        $userTable->createUser($email, $hashedPassword, $encryptedMasterKey);
     }
 
     /**
@@ -49,8 +49,8 @@ class AuthService
      */
     public function loginUser($email, $password): void
     {
-        $userRepository = $this->userRepository;
-        $user = $userRepository->findUserByEmail($email);
+        $userTable = $this->userTable;
+        $user = $userTable->findUserByEmail($email);
         if($user === null){
             throw new Exception("User doesnt exist");
         }
@@ -58,6 +58,9 @@ class AuthService
         if(!$result){
             throw new Exception("Wrong password");
         }
+        $decryptedMasterKey = $this->cryptoService->decryptMasterKey($user['encrypted_master_key'], $password);
+        $_SESSION['id'] = (int)$user['id'];
+        $_SESSION['masterKey'] = base64_encode($decryptedMasterKey);
 
 
 

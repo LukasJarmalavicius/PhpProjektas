@@ -1,5 +1,15 @@
 <?php
-    $authService = require __DIR__ . '/../classes/Auth.php';
+    require __DIR__ . '/../classes/autoload.php';
+
+    use classes\database\DbConnection;
+    use classes\database\UserTable;
+    use classes\services\AuthService;
+    use classes\services\CryptoService;
+
+    $pdo = DbConnection::connection();
+    $userTable = new UserTable($pdo);
+    $cryptoService = new CryptoService();
+    $authService = new AuthService($userTable, $cryptoService);
 
     $message = '';
 
@@ -9,7 +19,7 @@
            $username = trim($_POST['username'] ?? '');
            $email = $_POST['email'] ?? '';
            $password = $_POST['password'] ?? '';
-           $authService->registerUser($username, $email, $password);
+           $authService->registerUser($email, $password);
         }
         catch (Exception $e) {
             $message = $e->getMessage();

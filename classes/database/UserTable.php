@@ -22,17 +22,15 @@ class UserTable
 
 
     public function createUser(
-        string $username,
         string $email,
         string $hashedPassword,
         string $encryptedMasterKey): void
     {
         $stmt = $this->pdo->prepare("INSERT INTO Users 
-            (username,
-             email,
+            (email,
              password_hash,
-             encrypted_master_key) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$username,$email, $hashedPassword, $encryptedMasterKey]);
+             encrypted_master_key) VALUES (?, ?, ?)");
+        $stmt->execute([$email, $hashedPassword, $encryptedMasterKey]);
     }
 
 }

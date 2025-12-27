@@ -25,7 +25,7 @@
 
 <div class="box">
     <h2>Add password entry</h2>
-    <p class="hint">Store a password for a website/app. (Encryption + DB storage to be wired in next.)</p>
+    <p class="hint">Store a password for a website/app.</p>
 
     <form method="post">
         <input type="hidden" name="action" value="add_entry">
@@ -87,14 +87,43 @@
 </div>
 
 <div class="box">
-    <h2>Stored entries</h2>
-    <p class="hint">This section will list stored passwords once PasswordEntryRepository + decrypt flow is wired.</p>
+    <h2>Stored passwords</h2>
 
-    <!-- Placeholder list -->
-    <ul>
-        <li>(Not wired yet)</li>
-    </ul>
+    <?php if (empty($entries)): ?>
+        <p>No passwords stored yet.</p>
+    <?php else: ?>
+        <table>
+            <thead>
+            <tr>
+                <th>Service</th>
+                <th>Password</th>
+                <th>Created</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($entries as $e): ?>
+                <tr>
+                    <td><?= htmlspecialchars($e['Service']) ?></td>
+                    <td class="pwd"><?= htmlspecialchars($e['Password']) ?></td>
+                    <td><?= htmlspecialchars($e['created_at']) ?></td>
+                    <td>
+                        <form method="post" style="display:inline">
+                            <input type="hidden" name="action" value="delete_entry">
+                            <input type="hidden" name="entry_id" value="<?= (int)$e['id'] ?>">
+                            <button type="submit" onclick="return confirm('Delete this entry?')">
+                                Delete
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
 </div>
+
 
 </body>
 </html>
