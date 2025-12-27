@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; }
+    form { max-width: 400px; }
+    label { display: block; margin-top: 15px; }
+    input { width: 100%; padding: 8px; }
+    button { margin-top: 20px; padding: 10px; }
+    .message { margin-top: 20px; color: #c00; }
+  </style>
+</head>
+<body>
+
+<h1>Login</h1>
+
+<form method="post">
+  <label>
+    Email
+    <input type="text" name="email" required>
+  </label>
+
+  <label>
+    Password
+    <input type="password" name="password" required>
+  </label>
+
+  <button type="submit">Login</button>
+</form>
+
+<?php if (!empty($message)): ?>
+<p class="message"><?= htmlspecialchars($message) ?></p>
+<?php endif; ?>
+
+</body>
+</html>

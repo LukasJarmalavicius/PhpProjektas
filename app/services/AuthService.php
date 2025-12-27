@@ -7,7 +7,6 @@ use Exception;
 
 class AuthService
 
-
 {
     private UserRepository $userRepository;
     private CryptoService $cryptoService;
@@ -35,14 +34,34 @@ class AuthService
     public function registerUser($username, $email, $password): void
     {
         $userRepository = $this->userRepository;
-        $users = $userRepository->findUserByEmail($email);
-        if($users != null){
+        $user = $userRepository->findUserByEmail($email);
+        if($user != null){
             throw new Exception("User already exists");
         }
         $hashedPassword = $this->hashPassword($password);
         $encryptedMasterKey = $this->cryptoService->createEncryptedMasterKey($password);
 
         $userRepository->createUser($username, $email, $hashedPassword, $encryptedMasterKey);
+    }
+
+    /**
+     * @throws Exception if user does not exist
+     */
+    public function loginUser($email, $password): void
+    {
+        $userRepository = $this->userRepository;
+        $user = $userRepository->findPasswordByEmail($email);
+        if($user === null){
+            throw new Exception("User doesnt exist");
+        }
+        $result = $this->verifyPassword($password, $user);
+        if(!$result){
+            throw new Exception("Wrong password");
+        }
+
+
+
+
     }
 
 
