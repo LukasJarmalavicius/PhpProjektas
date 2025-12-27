@@ -36,6 +36,6 @@ require_once("../app/services/AuthService.php");
 
 
 
-    require __DIR__ . '/../views/register_form.php';
+    require __DIR__ . '/../views/register_form.html';
 
 

@@ -13,10 +13,10 @@ class UserRepository
         $this->pdo = $pdo;
     }
 
-    public function findUserByUsername(string $username) : ?array
+    public function findUserByEmail(string $email) : ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE username = :username LIMIT 1");
-        $stmt->execute(['username' => $username]);
+        $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE email = :email LIMIT 1");
+        $stmt->execute(['email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 

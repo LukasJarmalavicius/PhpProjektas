@@ -3,7 +3,7 @@
 namespace app\services;
 
 use app\database\UserRepository;
-use http\Exception\RuntimeException;
+use Exception;
 
 class AuthService
 
@@ -29,12 +29,15 @@ class AuthService
         return password_verify($password, $hashedPassword);
     }
 
+    /**
+     * @throws Exception if user exists
+     */
     public function registerUser($username, $email, $password): void
     {
         $userRepository = $this->userRepository;
-        $users = $userRepository->findUserByUsername($username);
+        $users = $userRepository->findUserByEmail($email);
         if($users != null){
-            throw new RuntimeException("User already exists");
+            throw new Exception("User already exists");
         }
         $hashedPassword = $this->hashPassword($password);
         $encryptedMasterKey = $this->cryptoService->createEncryptedMasterKey($password);
